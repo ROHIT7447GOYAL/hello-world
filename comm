@@ -1,0 +1,182 @@
+sublime
+firefox/chrome
+slack  id --- client
+postman id ---- gmail  , firefox addons 
+
+
+100552523
+
+sublime
+firefox/chrome
+slack  id --- client
+postman id ---- gmail  , firefox postman addons 
+iterm
+brew
+nifi
+phtyon 2,3
+jdk
+jupiter
+git
+
+
+
+-----------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+Bash completion has been installed to:
+  /usr/local/etc/bash_completion.d
+
+zsh completions and functions have been installed to:
+  /usr/local/share/zsh/site-functions
+
+Emacs Lisp files have been installed to:
+  /usr/local/share/emacs/site-lisp/git
+
+
+---------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+stackoverflow account
+confluence account
+
+5 days wraps
+confluence wigdet link
+email for production server
+headphone
+sesion calls  
+
+
+A project-level transaction control has been violated,This project is not tagged to you.Hence connect with RMG for tagging on project. Kindly check active assignment link in home page for your active tagging project.
+
+
+jdbc:sqlserver://lt-app-connecteast1-db.stg.local:1433;database=connecteast1
+
+
+
+https://sessionm.atlassian.net/wiki/spaces/INT/pages/547946826/Accessing+Nifi
+
+
+
+jdbc:sqlserver://lt-app-connecteast1-db.stg.local:1433;database=connecteast1
+
+
+lt-app-connecteast1-db.stg.local,1433;Initial Catalog=connecteast1;Persist Security Info=True;User ID=loyaltree;Password=J#1XvHrgva1ofGyr
+
+
+jdbc:sqlserver://lt-app-connecteast1-db.stg.local:1433;database=connecteast1
+
+
+declare @retailerid uniqueidentifier
+declare @storeid uniqueidentifier
+declare @addressid uniqueidentifier
+declare @posid uniqueidentifier
+declare @daysOfWeek int
+declare @openFrom varchar(100)
+declare @openTo varchar(100)
+declare @scanexpiration int
+
+set @retailerid=convert(uniqueidentifier, '01ABD157-B7AE-4BE7-A2AA-16B3D5465422')
+set @posid=convert(uniqueidentifier, '135A66C4-5850-4717-8718-92A78860A843')
+set @storeid=newid()
+set @addressid=newid()
+set @scanexpiration=10080
+set @daysOfWeek=127
+set @openFrom='{"ticks": 0}'
+set @openTo='{"ticks": 0}'
+
+
+exec Broker._Setup_RegisterStore 
+    @param_scanexpiration=@scanexpiration, 
+    @param_RetailerID=@retailerid,
+    @param_StoreID=@storeid,
+    @param_addressID=@addressid,
+    @param_add1='201 WILLOWBROOK DR',
+    @param_add2='',
+    @param_city='WAYNE',
+    @param_state='MI',
+    @param_zip='7470',
+    @param_country='USA',
+    @param_lat='0',
+    @param_lon='0',
+    @param_timezoneid='America/New_York',
+    @param_storeName='BOX SALE - MICHIGAN STATE',
+    @param_email='',
+    @param_phone=,
+    @param_openFrom=@openFrom,
+    @param_openTo=@openTo,
+    @param_daysOfWeek=@daysOfWeek,
+    @param_posstorekey='430',
+    @param_POSID=@posid
+
+
+
+
+    ${phone:equals(''):or(${phone:equals('')}):ifElse('(555) 555-5555','${phone}')}
+
+
+    docker run -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=ROHIT20rg$&' -p 1433:1433 -d mcr.microsoft.com/mssql/server:2017-CU8-ubuntu
+
+    docker run -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=ROHIT20rg$&' -e 'MSSQL_PID=Developer' -p 1433:1433 -d mcr.microsoft.com/mssql/server:2017-latest-ubuntu 
+
+
+
+
+CONTAINER ID        IMAGE                                               COMMAND                  CREATED             STATUS              PORTS                    NAMES
+cce43dc532ee        mcr.microsoft.com/mssql/server:2017-latest-ubuntu   "/opt/mssql/bin/sqls…"   8 minutes ago       Up 8 minutes        0.0.0.0:1433->1433/tcp   adoring_proskuriakova
+
+
+adoring_proskuriakova
+docker exec -it f1433a864dd3 /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P ROHIT20rg$&
+
+
+docker start -ai cce43dc532ee
+
+
+ /usr/local/Cellar/nifi/1.9.2
+
+ /usr/local/Cellar/git/2.23.0
+
+
+docker run -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=ROHIT20rg$&' -e 'MSSQL_PID=Developer' -p 1433:1433 -d mcr.microsoft.com/mssql/server:2017-latest-ubuntu 
+
+docker ps --all
+ACC,AMARAJABAT,AMBUJACEM,APOLLOTYRE,ASIANPAINT,AUROPHARMA,AXISBANK,BAJAJ_AUTO,BAJAJFINSV,BAJFINANCE,BALKRISIND,BANKBARODA,BANKBEES,BATAINDIA,BEL,BERGEPAINT,BHARATFORG,BIOCON,BOSCHLTD,BPCL,BRITANNIA,CADILAHC,CANBK,CASTROLIND,CENTURYTEX,CESC,CHOLAFIN,CIPLA,COALINDIA,COLPAL,CONCOR,CUMMINSIND,DABUR,EICHERMOT,ENGINERSIN,ESCORTS,EXIDEIND,FEDERALBNK,GLENMARK,GODREJCP,GOLDBEES,GRASIM,HAVELLS,HCLTECH,HDFC,HDFCBANK,HEROMOTOCO,HEXAWARE,HINDALCO,HINDPETRO,HINDUNILVR,HINDZINC,ICICIBANK,ICICIPRULI,IGL,INDUSINDBK,INFRATEL,INFY,ITC,JINDALSTEL,JSWSTEEL,JUSTDIAL,KAJARIACER,KOTAKBANK,L&TFH,LICHSGFIN,LIQUIDBEES,LUPIN,M&M,MANAPPURAM,MARICO,MARUTI,MCDOWELL_N,MCX,MFSL,MGL,MINDTREE,MRF,MUTHOOTFIN,NATIONALUM,NBCC,NCC,NESTLEIND,NIFTYBEES,NIITTECH,NMDC,NTPC,OFSS,OIL,ONGC,PEL,PETRONET,PFC,PIDILITIND,POWERGRID,PVR,RAMCOCEM,RAYMOND,RECLTD,RELIANCE,SAIL,SBIN,SHREECEM,SIEMENS,SRTRANSFIN,STAR,SUNTV,TATACHEM,TATAELXSI,TATAGLOBAL,TATAMOTORS,TATAMTRDVR,TATAPOWER,TATASTEEL,TCS,TECHM,TORNTPHARM,TORNTPOWER,TVSMOTOR,UBL,ULTRACEMCO,UNIONBANK,UPL,VOLTAS,WIPROlT
+
+
+
+wind+w  ---- close appl
+cntrl+up ---  all open tabs
+fn + side arrow --- home 
+command+option+esc ---  task manager
+command+shift+4 --- screenshot complete
+commands+tabs --- switch app
+command+up to page up,back from <
+command+control+q ----  lock 
+command+space   ---- spotlight
+
+
+
+
+
+--------------------------
+
+touchpad
+save to disk issue
+lock screen user
+update apps
+firefox installing agian
+heating issue
+
+
+
+
