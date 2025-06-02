@@ -7,7 +7,8 @@ df = pd.read_csv('option_chain.csv')
 records = []
 for stock in df['Symbol'].unique():
     sub = df[df['Symbol'] == stock].copy()
-    underlying = float(sub['CurrentPrice'].iloc[0])
+    ##underlying = float(sub['CurrentPrice'].iloc[0])
+    underlying = 1417.90
     support = float(sub['Support'].iloc[0])
     resistance = float(sub['Resistance'].iloc[0])
 
@@ -62,8 +63,7 @@ for stock in df['Symbol'].unique():
 
             put_spread = (put_ask - put_bid) / put_last if put_last != 0 else float('inf')
             call_spread = (call_ask - call_bid) / call_last if call_last != 0 else float('inf')
-            avg_spread = (put_spread + call_spread) / 2 if put_spread != float('inf') and call_spread != float(
-                'inf') else float('inf')
+            avg_spread = (put_spread + call_spread) / 2 if put_spread != float('inf') and call_spread != float('inf') else float('inf')
 
             liquidity = float(put['OI']) + float(call['OI'])
             iv_diff = float(call['IV']) - float(put['IV'])  # call IV - put IV
@@ -97,47 +97,48 @@ collars = pd.DataFrame(records)
 
 # Apply filter criteria
 filtered = collars[
-    (collars['Net Prem %'] <= 0) &
+    (collars['Net Prem %'] <= 0.5) &
     (collars['Max Loss %'].between(0, 7)) &
     (collars['Max Profit %'].between(3, 20)) &
     ((collars['Max Profit %'] - collars['Max Loss %']) >= -3) &
     ((collars['Move CE %'] - collars['Move PE %']) >= -3) &
     (collars['Net Prem %'] < collars['Diff %'])
-    ].copy()
+].copy()
 
 if filtered.empty:
     print("No setups meet the criteria.")
 else:
-    # Calculate ranks
+    # Compute ranks
     filtered['net_prem_rank'] = filtered['Net Premium'].rank(method='min', ascending=True)
     filtered['liquidity_rank'] = filtered['liquidity'].rank(method='min', ascending=False)
     filtered['iv_diff_rank'] = filtered['iv_diff'].rank(method='min', ascending=False)
     filtered['avg_spread_rank'] = filtered['avg_spread'].rank(method='min', ascending=True)
     filtered['strike_distance_rank'] = filtered['strike_distance'].rank(method='min', ascending=True)
 
-    # Calculate total rank score
-    filtered['total_rank'] = (
-                filtered['net_prem_rank'] + filtered['liquidity_rank'] + filtered['iv_diff_rank'] + filtered[
-            'avg_spread_rank'] + filtered['strike_distance_rank'])
+    # Compute weighted total rank
+    filtered['weighted_total_rank'] = (
+        0.25 * filtered['net_prem_rank'] +
+        0.25 * filtered['liquidity_rank'] +
+        0.15 * filtered['iv_diff_rank'] +
+        0.20 * filtered['avg_spread_rank'] +
+        0.15 * filtered['strike_distance_rank']
+    )
 
-    # Sort by total_rank and Net Premium
-    filtered = filtered.sort_values(by=['total_rank', 'Net Premium'], ascending=[True, True])
+    # Sort by weighted_total_rank ascending
+    filtered = filtered.sort_values(by='weighted_total_rank', ascending=True)
 
     # Add Rank column
     filtered['Rank'] = range(1, len(filtered) + 1)
 
     # Create Reason column
-    filtered['Reason'] = ("Total Rank Score: " + filtered['total_rank'].astype(str) + " (NetPrem:" + filtered[
-        'net_prem_rank'].astype(str) + ", Liquidity:" + filtered['liquidity_rank'].astype(str) + ", IVDiff:" + filtered[
-                              'iv_diff_rank'].astype(str) + ", Spread:" + filtered['avg_spread_rank'].astype(
-        str) + ", StrikeDist:" + filtered['strike_distance_rank'].astype(str) + ")")
+    filtered['Reason'] = "Weighted Rank Score: " + filtered['weighted_total_rank'].round(2).astype(str)
 
     sep = '-' * 120
     # Print grouped by Stock
     for stock, group in filtered.groupby('Stock'):
         print(sep)
         print(f"\nStock: {stock}")
-        print(group[['Rank', 'Current Price','Put Strike', 'Call Strike', 'Net Premium', 'Net Prem %' ,'Max Loss %', 'Max Profit %',
+        print(group[['Rank', 'Current Price','Put Strike', 'Call Strike','Put Premium', 'Call Credit', 'Net Premium', 'Net Prem %' ,'Max Loss %', 'Max Profit %',
                      'Move PE %', 'Move CE %', 'Diff %', 'Risk %','Reason' ]].to_string(index=False))
         print(f"\n")
 
