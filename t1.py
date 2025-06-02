@@ -7,6 +7,10 @@ import difflib
 import glob
 import datetime
 
+
+
+
+
 # Define the directory path
 directory = os.path.join("C:\\", "Users", "rohit", "Documents", "stocks")
 
@@ -60,7 +64,7 @@ def main():
 
     # Set today's date dynamically
     today = datetime.date.today()
-    date_str = today.strftime("%B %d, %Y")
+    date_str = f"{today.strftime('%B')} {today.day}, {today.year}"
 
     # Define the directory path
     folder_path = base_path
@@ -78,6 +82,10 @@ def main():
         f for f in collar_files
         if re.match(rf'.*Collar_{re.escape(date_str)}(\(\d+\))?\.csv$', f)
     ]
+
+    print(collar_pattern)
+    print(valid_collar_files)
+
 
     # Filter files to match ALL PARAMETERS_{date_str}*.csv or ALL PARAMETERS_{date_str}(number).csv
     valid_params_files = [

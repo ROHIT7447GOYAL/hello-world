@@ -66,7 +66,7 @@ output_path = r"C:\Users\rohit\Documents\csvtohtml"
 
 # Set today's date dynamically
 today = datetime.date.today()
-date_str = today.strftime("%B %d, %Y")
+date_str = f"{today.strftime('%B')} {today.day}, {today.year}"
 
 # Define the directory path
 folder_path = base_path
