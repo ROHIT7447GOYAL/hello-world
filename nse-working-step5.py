@@ -8,7 +8,7 @@ import time
 
 
 # ——— USER CONFIGURATION ———
-SYMBOLS = ["LICI"]
+SYMBOLS = ["ICICIBANK"]
 EXPIRY = "26-Jun-2025"
 OUTPUT_CSV = "option_chain.csv"
 

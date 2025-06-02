@@ -5,13 +5,13 @@ import mibian
 import logging
 
 # Set up logging
-logging.basicConfig(filename='collar_strategy.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
 
 # Load the option chain data
 try:
     df = pd.read_csv('option_chain.csv')
 except Exception as e:
-    logging.error(f"Failed to load option_chain.csv: {e}")
+
     print(f"Error: Could not load option_chain.csv - {e}")
     exit()
 
@@ -22,16 +22,16 @@ try:
     current_date = datetime.now()
     days_to_expiration = (expiry_date - current_date).days
     if days_to_expiration <= 0:
-        logging.error("Expiry date has passed. Cannot calculate Greeks.")
+
         print("Error: Expiry date has passed. Cannot calculate Greeks.")
         exit()
 except Exception as e:
-    logging.error(f"Failed to parse expiry date: {e}")
+
     print(f"Error: Invalid expiry date format - {e}")
     exit()
 
 # Set risk-free interest rate (India 10-year bond yield, June 2025)
-interest_rate = 6.75  # Consider fetching dynamically from Trading Economics
+interest_rate = 6.75
 
 records = []
 for stock in df['Symbol'].unique():
@@ -41,12 +41,14 @@ for stock in df['Symbol'].unique():
         support = float(sub['Support'].iloc[0])
         resistance = float(sub['Resistance'].iloc[0])
     except Exception as e:
-        logging.error(f"Failed to parse underlying, support, or resistance for {stock}: {e}")
+
         continue
 
     # Split calls & puts, including additional parameters
     calls = sub[sub['OptionType'] == 'Call'][['Strike', 'Last', 'IV', 'OI', 'ChngOI', 'Bid', 'Ask']].dropna()
     puts = sub[sub['OptionType'] == 'Put'][['Strike', 'Last', 'IV', 'OI', 'ChngOI', 'Bid', 'Ask']].dropna()
+
+    underlying = 1457.6
 
     # Build all possible collars for this stock
     for _, put in puts.iterrows():
@@ -99,28 +101,31 @@ for stock in df['Symbol'].unique():
                 avg_spread = (put_spread + call_spread) / 2 if put_spread != float('inf') and call_spread != float('inf') else float('inf')
 
                 liquidity = float(put['OI']) + float(call['OI'])
-                iv_diff = float(call['IV']) - float(put['IV'])  # call IV - put IV
+                iv_diff = float(call['IV']) - float(put['IV'])
                 strike_distance = abs(put_strike - support) + abs(call_strike - resistance)
 
-                # Calculate Greeks using mibian
+                # Calculate Greeks using mibian with corrected attributes
                 try:
                     put_greeks = mibian.BS([underlying, put_strike, interest_rate, days_to_expiration], volatility=put['IV'])
                     call_greeks = mibian.BS([underlying, call_strike, interest_rate, days_to_expiration], volatility=call['IV'])
+
                     put_delta = put_greeks.putDelta
                     call_delta = call_greeks.callDelta
                     net_delta = put_delta - call_delta
                     net_delta_abs = abs(net_delta)
-                    put_gamma = put_greeks.putGamma
-                    call_gamma = call_greeks.callGamma
-                    net_gamma = put_gamma - call_gamma
+
+                    # Use the correct attribute names as per mibian documentation
+                    gamma = put_greeks.gamma  # Shared Gamma for both call and put
+                    net_gamma = gamma  # Since gamma is the same for both, net_gamma is gamma
+
                     put_theta = put_greeks.putTheta
                     call_theta = call_greeks.callTheta
                     net_theta = put_theta - call_theta
-                    put_vega = put_greeks.vega
-                    call_vega = call_greeks.vega
-                    net_vega = put_vega - call_vega
+
+                    vega = put_greeks.vega  # Shared Vega for both call and put
+                    net_vega = vega  # Since vega is the same for both, net_vega is vega
                 except Exception as e:
-                    logging.warning(f"Error calculating Greeks for {stock} (Put Strike: {put_strike}, Call Strike: {call_strike}): {e}")
+
                     net_delta_abs = float('inf')
                     net_gamma = float('inf')
                     net_theta = float('inf')
@@ -153,7 +158,7 @@ for stock in df['Symbol'].unique():
                     'net_vega': net_vega,
                 })
             except Exception as e:
-                logging.warning(f"Error processing strategy for {stock} (Put Strike: {put_strike}, Call Strike: {call_strike}): {e}")
+
                 continue
 
 # Create DataFrame of all collars
@@ -161,9 +166,9 @@ collars = pd.DataFrame(records)
 
 # Apply filter criteria with max profit and loss of 4%
 filtered = collars[
-    (collars['Net Prem %'] <= 0) &
-    (collars['Max Loss %'].between(0, 4)) &
-    (collars['Max Profit %'].between(0, 4)) &
+    (collars['Net Prem %'] <= 0.5) &
+    (collars['Max Loss %'].between(0, 7)) &
+    (collars['Max Profit %'].between(3, 10)) &
     ((collars['Max Profit %'] - collars['Max Loss %']) >= -3) &
     ((collars['Move CE %'] - collars['Move PE %']) >= -3) &
     (collars['Net Prem %'] < collars['Diff %'])
@@ -218,13 +223,20 @@ else:
     )
 
     # Print grouped by Stock
+    sep = '-' * 120
     for stock, group in filtered.groupby('Stock'):
+        print(sep)
         print(f"\nStock: {stock}")
         print(group[['Rank', 'Put Strike', 'Call Strike', 'Net Premium', 'Max Loss %', 'Max Profit %', 'Reason']].to_string(index=False))
-        logging.info(f"Processed strategies for {stock}: {len(group)} strategies")
+        print(f"\n")
+        print(sep)
 
     # Save to CSV
-    csv_path = r'C:\Users\rohit\Documents\csvtohtml\filtered_collars.csv'
+    csv_path = r'C:\Users\rohit\Documents\csvtohtml\abfiltered_collars-delta.csv'
+    filtered=filtered[['Rank', 'Put Strike', 'Call Strike', 'Max Loss %', 'Max Profit %','Net Prem %','net_prem_rank','weighted_total_rank']]
+
+    filtered = filtered[filtered["net_prem_rank"].between(1, 7)]
+    filtered = filtered[filtered["Rank"].between(1, 7)]
     filtered.to_csv(csv_path, index=False)
     print(f"Filtered collars saved to {csv_path}")
     logging.info(f"Filtered collars saved to {csv_path}")
@@ -232,7 +244,7 @@ else:
     # Run csvtohtml.py
     try:
         subprocess.run(['python', 'csvtohtml.py'])
-        logging.info("Successfully ran csvtohtml.py")
+
     except Exception as e:
-        logging.error(f"Failed to run csvtohtml.py: {e}")
+
         print(f"Error: Failed to run csvtohtml.py - {e}")

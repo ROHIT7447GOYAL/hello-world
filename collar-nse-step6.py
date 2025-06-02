@@ -8,7 +8,7 @@ records = []
 for stock in df['Symbol'].unique():
     sub = df[df['Symbol'] == stock].copy()
     ##underlying = float(sub['CurrentPrice'].iloc[0])
-    underlying = 1417.90
+    underlying = 1457.6
     support = float(sub['Support'].iloc[0])
     resistance = float(sub['Resistance'].iloc[0])
 
@@ -145,7 +145,13 @@ else:
 
     # Save to CSV
     print(sep)
-    csv_path = r'C:\Users\rohit\Documents\csvtohtml\filtered_collars.csv'
+    csv_path = r'C:\Users\rohit\Documents\csvtohtml\afiltered_collars.csv'
+    filtered = filtered[
+        ['Rank', 'Put Strike', 'Call Strike', 'Max Loss %', 'Max Profit %', 'Net Prem %', 'net_prem_rank',
+         'weighted_total_rank']]
+
+    filtered = filtered[filtered["net_prem_rank"].between(1, 7)]
+    filtered = filtered[filtered["Rank"].between(1, 7)]
     filtered.to_csv(csv_path, index=False)
     print(f"Filtered collars saved to {csv_path}")
 

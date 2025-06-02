@@ -4,6 +4,7 @@ import time
 import glob
 import pandas as pd
 from datetime import datetime
+import subprocess
 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -84,7 +85,9 @@ def main():
     csv_name = f"{CSV_PREFIX}.csv"
     csv_path = os.path.join(OUTPUT_DIR, csv_name)
     combined.to_csv(csv_path, index=False)
+    combined.to_csv(r"C:\Users\rohit\Documents\csvtohtml\investing_data,csv", index=False)
     print(f"✔️  Saved CSV: {csv_path}")
+
 
     # Build diff HTML using last 10 CSVs
     pattern = os.path.join(OUTPUT_DIR, f"{CSV_PREFIX}_*.csv")
@@ -143,3 +146,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+subprocess.run(['python', 'csvtohtml.py'])

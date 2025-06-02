@@ -7,6 +7,7 @@ import re
 import difflib
 import glob
 import datetime
+import subprocess
 
 # Define the directory path
 directory = os.path.join("C:\\", "Users", "rohit", "Documents", "stocks")
@@ -241,3 +242,5 @@ top7_df = filtered_df.sort_values(by='total', ascending=False).head(7)
 top7_df[['stock_code', 'total', 'stock_name', 'position_value', 'has_position', 'Daily_x_num', '1_Week_num', '1_Month_num', '1_Year_num']].to_csv(top7_output, index=False)
 
 print("Processing complete. Filtered CSV files have been saved.")
+
+subprocess.run(['python', 'csvtohtml.py'])
