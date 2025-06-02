@@ -141,6 +141,7 @@ else:
                      'Move PE %', 'Move CE %', 'Diff %', 'Risk %','Reason' ]].to_string(index=False))
         print(f"\n")
 
+
     # Save to CSV
     print(sep)
     csv_path = r'C:\Users\rohit\Documents\csvtohtml\filtered_collars.csv'
