@@ -48,7 +48,7 @@ for stock in df['Symbol'].unique():
     calls = sub[sub['OptionType'] == 'Call'][['Strike', 'Last', 'IV', 'OI', 'ChngOI', 'Bid', 'Ask']].dropna()
     puts = sub[sub['OptionType'] == 'Put'][['Strike', 'Last', 'IV', 'OI', 'ChngOI', 'Bid', 'Ask']].dropna()
 
-    underlying = 1457.6
+    ###underlying = 1457.6
 
     # Build all possible collars for this stock
     for _, put in puts.iterrows():
@@ -163,16 +163,21 @@ for stock in df['Symbol'].unique():
 
 # Create DataFrame of all collars
 collars = pd.DataFrame(records)
+##print(collars)
+##filtered= collars
+
 
 # Apply filter criteria with max profit and loss of 4%
 filtered = collars[
     (collars['Net Prem %'] <= 0.5) &
-    (collars['Max Loss %'].between(0, 7)) &
-    (collars['Max Profit %'].between(3, 10)) &
+    (collars['Max Loss %'].between(0, 4)) &
+    (collars['Max Profit %'].between(3, 20)) &
     ((collars['Max Profit %'] - collars['Max Loss %']) >= -3) &
     ((collars['Move CE %'] - collars['Move PE %']) >= -3) &
     (collars['Net Prem %'] < collars['Diff %'])
 ].copy()
+
+
 
 if filtered.empty:
     print("No setups meet the criteria.")

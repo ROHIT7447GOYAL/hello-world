@@ -4,15 +4,16 @@ import requests
 import csv
 import time
 
-##SYMBOLS    = ["MGL", "SBIN", "ICICIBANK", "AXISBANK ", "OIL" ,"VEDL", "FEDERALBNK", "NIFTY","UNIONBANK" ,"HDFCBANK","INDIANB" ,"SHRIRAMFIN" ,"PNBHOUSING"]  # equity vs index
+##SYMBOLS    = ["MGL",  "BANKBARODA","SBIN", "ICICIBANK", "AXISBANK ", "OIL" ,"VEDL", "FEDERALBNK", "NIFTY","UNIONBANK" ,"HDFCBANK","INDIANB" ,"SHRIRAMFIN" ,"PNBHOUSING"]  # equity vs index
 
+underlyingValue =254.12
 
 # ——— USER CONFIGURATION ———
-SYMBOLS = ["ICICIBANK"]
+SYMBOLS = ["BANKBARODA"]
 EXPIRY = "26-Jun-2025"
 OUTPUT_CSV = "option_chain.csv"
 
-# ——— Constants & URLs ———
+# ——— Constants & URLs ———4
 BASE_URL = "https://www.nseindia.com"
 EQUITY_HTML = BASE_URL + "/option-chain-equities?symbol={}"
 EQUITY_API = BASE_URL + "/api/option-chain-equities?symbol={}"
@@ -117,7 +118,8 @@ def main():
                 continue
 
             recs = data.get("records", {})
-            current_price = recs.get("underlyingValue", "")
+            ##current_price = recs.get("underlyingValue", "")
+            current_price=underlyingValue
             all_strikes = recs.get("data", [])
             filt = [r for r in all_strikes if r.get("expiryDate") == EXPIRY]
             if not filt:

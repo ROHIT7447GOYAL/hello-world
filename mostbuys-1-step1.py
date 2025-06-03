@@ -76,7 +76,7 @@ for card in stock_cards:
 driver.quit()
 
 # Filter stocks with buy ratings >= 7
-filtered_stocks = [stock for stock in stocks_data if stock[5] >= 7]
+filtered_stocks = [stock for stock in stocks_data if stock[5] >= 5]
 
 # Write to CSV at specified path
 output_path = r'C:\Users\rohit\Documents\stocks\money_market_buysstocks.csv'

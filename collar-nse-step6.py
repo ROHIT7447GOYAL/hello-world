@@ -7,8 +7,8 @@ df = pd.read_csv('option_chain.csv')
 records = []
 for stock in df['Symbol'].unique():
     sub = df[df['Symbol'] == stock].copy()
-    ##underlying = float(sub['CurrentPrice'].iloc[0])
-    underlying = 1457.6
+    underlying = float(sub['CurrentPrice'].iloc[0])
+    ##underlying = 811.55
     support = float(sub['Support'].iloc[0])
     resistance = float(sub['Resistance'].iloc[0])
 
@@ -98,7 +98,7 @@ collars = pd.DataFrame(records)
 # Apply filter criteria
 filtered = collars[
     (collars['Net Prem %'] <= 0.5) &
-    (collars['Max Loss %'].between(0, 7)) &
+    (collars['Max Loss %'].between(0, 4)) &
     (collars['Max Profit %'].between(3, 20)) &
     ((collars['Max Profit %'] - collars['Max Loss %']) >= -3) &
     ((collars['Move CE %'] - collars['Move PE %']) >= -3) &
