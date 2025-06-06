@@ -40,14 +40,15 @@ try:
         how="inner"
     )
 
+   ## merged_data['i_hourly'].str.lower().isin(['buy','strong buy'])
 
     print(merged_data.columns)
     # Further categorize records into Buy, Sell, and Neutral
     buy_records = merged_data[
         merged_data['i_weekly'].str.lower().isin(['buy','strong buy']) &
         merged_data['i_monthly'].str.lower().isin(['buy','strong buy']) &
-        merged_data['i_daily_y'].str.lower().isin(['buy','strong buy']) &
-        merged_data['i_hourly'].str.lower().isin(['buy','strong buy'])
+        merged_data['i_daily_y'].str.lower().isin(['buy','strong buy'])
+
     ].copy()
 
     sell_records = merged_data[

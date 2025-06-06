@@ -141,7 +141,7 @@ for group in groups:
         'tickertape': 1 if 'tickertape' in sources else 0,
         'total': len(sources)
     }
-    if row['total'] >= 2:
+    if row['total'] >= 0:
         combined_data.append(row)
 combined_df = pd.DataFrame(combined_data)
 
@@ -174,7 +174,7 @@ combined_df['1_Year_num'] = pd.to_numeric(combined_df['1 Year'].str.replace('%',
 filtered_df = combined_df[
     ((combined_df['Daily_x_num'].isna()) | (combined_df['Daily_x_num'] <= 1.5)) &
     ((combined_df['1_Week_num'].isna()) | (combined_df['1_Week_num'] <= 5)) &
-    ((combined_df['1_Month_num'].isna()) | (combined_df['1_Month_num'] <= 7)) &
+    ((combined_df['1_Month_num'].isna()) | (combined_df['1_Month_num'] <= 9)) &
     ((combined_df['1_Year_num'].isna()) | (combined_df['1_Year_num'] <= 50))
 ]
 
